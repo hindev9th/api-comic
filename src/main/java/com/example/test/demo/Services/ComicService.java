@@ -34,83 +34,10 @@ import java.util.Map;
 @Service
 public class ComicService {
     private final ComicRepository comicRepository;
-    private final MongoTemplate mongoTemplate;
     private final static int LIMIT = 16;
 
-    private ComicService(ComicRepository comicRepository,MongoTemplate mongoTemplate){
+    private ComicService(ComicRepository comicRepository){
         this.comicRepository = comicRepository;
-        this.mongoTemplate = mongoTemplate;
-    }
-
-    @Scheduled(fixedRate = 180000)
-    public ApiResponse<?> create(){
-        try {
-
-            for (int j =0; j < 5; j++){
-                Document doc = (Document) ParseHtml.getHtml(ParseHtml.BASE_COMIC_URL + "?page=" + j);
-                Elements elements = ComicNetwork.getList(doc);
-
-                for (org.jsoup.nodes.Element element : elements) {
-
-                    String id = ComicNetwork.getId(element);
-                    String name = ComicNetwork.getName(element);
-                    String anotherName = ComicNetwork.getAnotherName(element);
-                    String url = ComicNetwork.getUrl(element);
-                    String image = ComicNetwork.getImage(element);
-                    String view = ComicNetwork.getViewCount(element);
-                    String follow = ComicNetwork.getFollowCount(element);
-                    String description = ComicNetwork.getDescription(element);
-                    String categories = ComicNetwork.getCategories(element);
-
-                    String chapterId = ChapterNetwork.getId(element);
-                    String chapterName = ChapterNetwork.getName(element);
-                    String chapterUrl = ChapterNetwork.getUrl(element);
-                    String chapterTime = ChapterNetwork.getTime(element);
-
-                    Date timeUpdate = DateTimeConvertHelper.convertTimeAgoToDateTime(chapterTime);
-
-
-                    Chapter chapter = new Chapter(chapterId, chapterName, chapterUrl, chapterTime);
-
-//                    Comic comic = new Comic();
-//                    comic.setId(id);
-//                    comic.setName(name);
-//                    comic.setAnotherName(anotherName);
-//                    comic.setUrl(url);
-//                    comic.setImage(image);
-//                    comic.setView(view);
-//                    comic.setFollow(follow);
-//                    comic.setDescription(description);
-//                    comic.setCategories(categories);
-//                    comic.setChapter(chapter);
-//                    comic.setUpdated_at(timeUpdate);
-
-                    Query query = new Query(Criteria.where("id").is(id));
-                    FindAndModifyOptions options = new FindAndModifyOptions().upsert(true).returnNew(true);
-
-                    Update update = new Update();
-
-                    update.set("id", id);
-                    update.set("name", name);
-                    update.set("another_name", anotherName);
-                    update.set("url", url);
-                    update.set("image", image);
-                    update.set("view", view);
-                    update.set("follow", follow);
-                    update.set("description", description);
-                    update.set("categories", categories);
-                    update.set("chapter", chapter);
-                    update.set("updated_at", timeUpdate);
-
-                    this.mongoTemplate.upsert(query, update, Comic.class);
-                }
-            }
-
-            return new SuccessResponse<>();
-
-        }catch (IOException e){
-            return new ErrorResponse<>(400,e.getMessage());
-        }
     }
 
     public ApiResponse<?> list(int page){

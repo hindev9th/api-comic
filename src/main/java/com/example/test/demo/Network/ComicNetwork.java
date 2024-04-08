@@ -75,7 +75,7 @@ public class ComicNetwork {
 
     public static String getFollowCount(Element element) {
         Elements info = getListInfo(element);
-        String follow = info.get(info.size() - 2).text();;
+        String follow = info.get(info.size() - 2).text();
         return follow.replace("Theo dõi:", "");
     }
 }

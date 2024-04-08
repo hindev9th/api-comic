@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class HttpServletResponseHelper {
 
-    private HttpServletResponse httpServletResponse;
+    private final HttpServletResponse httpServletResponse;
     private ApiResponse<?> apiResponse;
 
     public HttpServletResponseHelper(HttpServletResponse response){
