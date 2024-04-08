@@ -9,7 +9,7 @@ spring:
     import: "optional:file:env.properties"
   data:
     mongodb:
-      uri: ${MONGO_URI:mongodb+srv://hindev9th:b4SvMam66Q5ZWRfs@cluster0.qavd2co.mongodb.net/comics-app}
+      uri: ${MONGO_URI}
       authentication-database: ${AUTHENTICATION_DB:admin}
       auto-index-creation: true
     redis:
