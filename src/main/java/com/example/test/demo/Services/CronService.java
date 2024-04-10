@@ -8,10 +8,8 @@ import com.example.test.demo.Models.Comic;
 import com.example.test.demo.Network.ChapterNetwork;
 import com.example.test.demo.Network.ComicNetwork;
 import com.example.test.demo.Network.ParseHtml;
-import com.example.test.demo.Reponsitories.ComicRepository;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -59,6 +57,7 @@ public class CronService {
                     String follow = ComicNetwork.getFollowCount(element);
                     String description = ComicNetwork.getDescription(element);
                     String categories = ComicNetwork.getCategories(element);
+                    String status = ComicNetwork.getStatus(element);
 
                     String chapterId = ChapterNetwork.getId(element);
                     String chapterName = ChapterNetwork.getName(element);
@@ -70,7 +69,6 @@ public class CronService {
                     Chapter chapter = new Chapter(chapterId, chapterName, chapterUrl, chapterTime);
 
                     Query query = new Query(Criteria.where("id").is(id));
-                    FindAndModifyOptions options = new FindAndModifyOptions().upsert(true).returnNew(true);
 
                     Update update = new Update();
 
@@ -84,6 +82,7 @@ public class CronService {
                     update.set("description", description);
                     update.set("categories", categories);
                     update.set("chapter", chapter);
+                    update.set("status", status);
                     update.set("updated_at", timeUpdate);
 
                     this.mongoTemplate.upsert(query, update, Comic.class);
