@@ -44,7 +44,7 @@ public class ComicService {
             itemOj.put("description", item.getDescription());
             itemOj.put("chapter", item.getChapter());
             itemOj.put("status", item.getStatus());
-            itemOj.put("api_chapter", "https://nettruyenco.vn/Comic/Services/ComicService.asmx/ProcessChapterList?comicId=" + item.getId());
+            itemOj.put("api_chapter", "https://www.nettruyentt.com/Comic/Services/ComicService.asmx/ProcessChapterList?comicId=" + item.getId());
 
             return itemOj;
         }));
