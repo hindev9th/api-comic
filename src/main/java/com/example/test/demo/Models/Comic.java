@@ -44,4 +44,7 @@ public class Comic extends BaseMongoModel{
 
     @Field(name = "chapter")
     private Chapter chapter;
+
+    @Field(name = "status")
+    private String status;
 }
