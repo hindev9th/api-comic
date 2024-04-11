@@ -37,17 +37,12 @@ public class CronService {
         this.loadData(2);
     }
 
-    @Scheduled(fixedRate = 1000)
-    public void test(){
-        System.out.println("testttt");
-    }
     public void loadAll(){
         this.loadData(611);
     }
 
     private void loadData(int page){
         try {
-
             for (int j =0; j < page; j++){
                 Document doc = (Document) ParseHtml.getHtml(ParseHtml.BASE_COMIC_URL + "?page=" + j);
                 Elements elements = ComicNetwork.getList(doc);
@@ -94,11 +89,9 @@ public class CronService {
                     this.mongoTemplate.upsert(query, update, Comic.class);
                 }
             }
-
-            new SuccessResponse<>();
-
+            System.out.println("update comic");
         }catch (IOException e){
-            new ErrorResponse<>(400, e.getMessage());
+            System.out.println("update comic Error : " + e.getMessage());
         }
     }
 }
