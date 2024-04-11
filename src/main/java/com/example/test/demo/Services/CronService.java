@@ -43,7 +43,7 @@ public class CronService {
 
     private void loadData(int page){
         try {
-            for (int j =0; j < page; j++){
+            for (int j =1; j <= page; j++){
                 Document doc = (Document) ParseHtml.getHtml(ParseHtml.BASE_COMIC_URL + "?page=" + j);
                 Elements elements = ComicNetwork.getList(doc);
 
