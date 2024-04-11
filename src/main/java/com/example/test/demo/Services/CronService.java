@@ -37,6 +37,10 @@ public class CronService {
         this.loadData(2);
     }
 
+    @Scheduled(fixedRate = 1000)
+    public void test(){
+        System.out.println("testttt");
+    }
     public void loadAll(){
         this.loadData(611);
     }
