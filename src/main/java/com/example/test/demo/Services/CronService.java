@@ -46,7 +46,8 @@ public class CronService {
             for (int j =1; j <= page; j++){
                 Document doc = (Document) ParseHtml.getHtml(ParseHtml.BASE_COMIC_URL + "?page=" + j);
                 Elements elements = ComicNetwork.getList(doc);
-
+                System.out.println("Html : " + doc.html());
+                System.out.println("List : " + elements.html());
                 for (org.jsoup.nodes.Element element : elements) {
 
                     String id = ComicNetwork.getId(element);
@@ -85,13 +86,14 @@ public class CronService {
                     update.set("chapter", chapter);
                     update.set("status", status);
                     update.set("updated_at", timeUpdate);
+                    System.out.println("update comic : " + name);
 
                     this.mongoTemplate.upsert(query, update, Comic.class);
                 }
             }
-            System.out.println("update comic");
+            System.out.println("Update comic success!");
         }catch (IOException e){
-            System.out.println("update comic Error : " + e.getMessage());
+            System.out.println("Update comic Error : " + e.getMessage());
         }
     }
 }
