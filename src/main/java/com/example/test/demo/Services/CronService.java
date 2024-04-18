@@ -5,9 +5,11 @@ import com.example.test.demo.Http.Responses.ErrorResponse;
 import com.example.test.demo.Http.Responses.SuccessResponse;
 import com.example.test.demo.Models.Chapter;
 import com.example.test.demo.Models.Comic;
+import com.example.test.demo.Models.Log;
 import com.example.test.demo.Network.ChapterNetwork;
 import com.example.test.demo.Network.ComicNetwork;
 import com.example.test.demo.Network.ParseHtml;
+import com.example.test.demo.Reponsitories.LogRepository;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -24,9 +26,11 @@ import java.util.Date;
 @Service
 public class CronService {
     private final MongoTemplate mongoTemplate;
+    private final LogRepository logRepository;
 
-    private CronService(MongoTemplate mongoTemplate){
+    private CronService(MongoTemplate mongoTemplate,LogRepository logRepository){
         this.mongoTemplate = mongoTemplate;
+        this.logRepository = logRepository;
     }
 
     @Scheduled(fixedRate = 180000)
@@ -86,13 +90,25 @@ public class CronService {
                     update.set("updated_at", timeUpdate);
 
                     this.mongoTemplate.upsert(query, update, Comic.class);
+
+                    Log log = new Log();
+                    log.setName("update comic: " + name);
+                    log.setContent(doc.toString());
+                    log.setAddress(this.getClass().getCanonicalName());
+                    this.logRepository.save(log);
                 }
             }
-
-            new SuccessResponse<>();
+            Log log = new Log();
+            log.setName("update comic end");
+            log.setAddress(this.getClass().getCanonicalName());
+            this.logRepository.save(log);
 
         }catch (IOException e){
-            new ErrorResponse<>(400, e.getMessage());
+            Log log = new Log();
+            log.setName("Error update comic");
+            log.setContent(e.getMessage());
+            log.setAddress(this.getClass().getCanonicalName());
+            this.logRepository.save(log);
         }
     }
 }

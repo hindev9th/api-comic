@@ -11,7 +11,7 @@ COPY ./src src
 
 
 RUN ./mvnw install -DskipTests
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+RUN mkdir -p target/dependency && (mv target/dependency; jar -xf ../*.jar)
 
 FROM eclipse-temurin:21-jre-jammy
 
