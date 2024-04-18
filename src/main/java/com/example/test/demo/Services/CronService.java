@@ -90,13 +90,11 @@ public class CronService {
                     update.set("updated_at", timeUpdate);
 
                     this.mongoTemplate.upsert(query, update, Comic.class);
-
-                    Log log = new Log();
-                    log.setName("update comic: " + name);
-                    log.setContent(doc.toString());
-                    log.setAddress(this.getClass().getCanonicalName());
-                    this.logRepository.save(log);
                 }
+                Log log = new Log();
+                log.setName("Update "+elements.size()+" comics!");
+                log.setAddress(this.getClass().getCanonicalName());
+                this.logRepository.save(log);
             }
             Log log = new Log();
             log.setName("update comic end");
