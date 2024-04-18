@@ -1,13 +1,6 @@
 FROM eclipse-temurin:21-jdk-jammy AS build
 RUN apt-get update
-RUN apt-get -y install curl
-RUN apt-get -y install gpg
-RUN apt-get -y install lsb-release
 
-RUN curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
-RUN echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list
-RUN apt-get update
-RUN apt-get -y install redis
 
 WORKDIR /workspace/app
 
