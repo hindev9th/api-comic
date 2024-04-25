@@ -8,7 +8,9 @@ import com.example.test.demo.Models.Comic;
 import com.example.test.demo.Models.Log;
 import com.example.test.demo.Network.ChapterNetwork;
 import com.example.test.demo.Network.ComicNetwork;
+import com.example.test.demo.Network.DataUrlCallback;
 import com.example.test.demo.Network.ParseHtml;
+import com.example.test.demo.Reponsitories.ComicRepository;
 import com.example.test.demo.Reponsitories.LogRepository;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -27,28 +29,34 @@ import java.util.Date;
 public class CronService {
     private final MongoTemplate mongoTemplate;
     private final LogRepository logRepository;
+    private final ComicRepository comicRepository;
 
-    private CronService(MongoTemplate mongoTemplate,LogRepository logRepository){
+    private CronService(MongoTemplate mongoTemplate, LogRepository logRepository, ComicRepository comicRepository) {
         this.mongoTemplate = mongoTemplate;
         this.logRepository = logRepository;
+        this.comicRepository = comicRepository;
     }
 
     @Scheduled(fixedRate = 180000)
     @Async
-    public void loadTwo(){
-        this.loadData(2);
+    public void loadTwo() {
+        this.loadData(1);
     }
 
-    public void loadAll(){
-        this.loadData(611);
+    public void loadAll() {
+        this.loadData(1000);
     }
 
-    private void loadData(int page){
+    private void loadData(int page) {
         try {
 
-            for (int j =0; j < page; j++){
+            for (int j = 1; j <= page; j++) {
                 Document doc = (Document) ParseHtml.getHtml(ParseHtml.BASE_COMIC_URL + "?page=" + j);
                 Elements elements = ComicNetwork.getList(doc);
+
+                if (elements.isEmpty()){
+                    break;
+                }
 
                 for (org.jsoup.nodes.Element element : elements) {
 
@@ -71,16 +79,39 @@ public class CronService {
                     Date timeUpdate = DateTimeConvertHelper.convertTimeAgoToDateTime(chapterTime);
 
                     Chapter chapter = new Chapter(chapterId, chapterName, chapterUrl, chapterTime);
+                    Comic comic = new Comic();
+                    comic.setId(id);
+                    comic.setName(name);
+                    comic.setAnotherName(anotherName);
+                    comic.setUrl(url);
+                    comic.setImage(image);
+                    comic.setView(view);
+                    comic.setFollow(follow);
+                    comic.setDescription(description);
+                    comic.setCategories(categories);
+                    comic.setStatus(status);
+                    comic.setChapter(chapter);
+                    comic.setUpdatedAt(timeUpdate);
 
                     Query query = new Query(Criteria.where("id").is(id));
 
                     Update update = new Update();
+                    if (!checkExist(id)){
+                        ParseHtml.toDataUrl("https:" + ParseHtml.BASE_IMAGE_URL + image, new DataUrlCallback() {
+                            @Override
+                            public void onDataUrlGenerated(String dataUrl) {
+                                comic.setImageBase64(dataUrl);
+                            }
 
-                    update.set("id", id);
-                    update.set("name", name);
-                    update.set("another_name", anotherName);
-                    update.set("url", url);
-                    update.set("image", image);
+                            @Override
+                            public void onError(String errorMessage) {
+                                saveLog("Get Base64 Error","Error: " + errorMessage);
+                            }
+                        });
+                        this.createComic(comic);
+                        continue;
+                    }
+
                     update.set("view", view);
                     update.set("follow", follow);
                     update.set("description", description);
@@ -89,24 +120,31 @@ public class CronService {
                     update.set("status", status);
                     update.set("updated_at", timeUpdate);
 
-                    this.mongoTemplate.upsert(query, update, Comic.class);
+                    this.mongoTemplate.findAndModify(query, update, Comic.class);
                 }
-                Log log = new Log();
-                log.setName("Update "+elements.size()+" comics!");
-                log.setAddress(this.getClass().getCanonicalName());
-                this.logRepository.save(log);
+                this.saveLog("Update " + elements.size() + " comics!","");
             }
-            Log log = new Log();
-            log.setName("update comic end");
-            log.setAddress(this.getClass().getCanonicalName());
-            this.logRepository.save(log);
+            this.saveLog("update comic end","");
 
-        }catch (IOException e){
-            Log log = new Log();
-            log.setName("Error update comic");
-            log.setContent(e.getMessage());
-            log.setAddress(this.getClass().getCanonicalName());
-            this.logRepository.save(log);
+        } catch (IOException e) {
+            this.saveLog("Error update comic",e.getMessage());
         }
+    }
+
+    private void createComic(Comic comic){
+        this.comicRepository.save(comic);
+    }
+
+    private boolean checkExist(String comicId){
+        Query query = Query.query(Criteria.where("id").is(comicId));
+        return this.mongoTemplate.exists(query,Comic.class);
+    }
+
+    private void saveLog(String name, String content){
+        Log log = new Log();
+        log.setName("update comic end");
+        log.setContent(content);
+        log.setAddress(this.getClass().getCanonicalName());
+        this.logRepository.save(log);
     }
 }

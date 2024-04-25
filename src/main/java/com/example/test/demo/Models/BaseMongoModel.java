@@ -16,7 +16,5 @@ public class BaseMongoModel {
     @CreatedDate
     private Date created_at;
 
-    @Setter
-    @LastModifiedDate
-    private Date updated_at;
+
 }

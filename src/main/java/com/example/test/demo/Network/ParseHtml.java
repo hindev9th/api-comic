@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class ParseHtml {
     public static final String BASE_COMIC_URL = "https://www.nettruyentt.com/";
@@ -55,6 +58,46 @@ public class ParseHtml {
             return result;
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException("Failed to create a SSL socket factory", e);
+        }
+    }
+
+    public static void toDataUrl(String url, DataUrlCallback callback) {
+        HttpURLConnection connection = null;
+        InputStream is = null;
+        ByteArrayOutputStream baos = null;
+
+        try {
+            URL imageUrl = new URL(url);
+            connection = (HttpURLConnection) imageUrl.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+
+            is = connection.getInputStream();
+            baos = new ByteArrayOutputStream();
+
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                baos.write(buffer, 0, bytesRead);
+            }
+
+            byte[] imageData = baos.toByteArray();
+            String base64Image = java.util.Base64.getEncoder().encodeToString(imageData);
+
+            callback.onDataUrlGenerated("data:image/jpeg;base64," + base64Image);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            callback.onError(e.getMessage());
+
+        } finally {
+            try {
+                if (is != null) is.close();
+                if (baos != null) baos.close();
+                if (connection != null) connection.disconnect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

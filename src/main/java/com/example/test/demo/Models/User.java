@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Date;
 
 @Getter
 @Setter
@@ -24,4 +27,7 @@ public class User extends BaseMongoModel{
 
     @Field(name = "avatar")
     private String avatar;
+
+    @LastModifiedDate
+    private Date updated_at;
 }

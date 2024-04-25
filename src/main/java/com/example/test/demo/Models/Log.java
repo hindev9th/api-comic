@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Date;
 
 @Getter
 @Setter
@@ -19,4 +22,7 @@ public class Log extends BaseMongoModel{
     private String content;
     @Field(value = "address")
     private String address;
+
+    @LastModifiedDate
+    private Date updated_at;
 }

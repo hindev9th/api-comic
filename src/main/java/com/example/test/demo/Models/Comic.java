@@ -5,8 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.joda.time.DateTime;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Date;
 
 @Getter
 @Setter
@@ -26,6 +29,9 @@ public class Comic extends BaseMongoModel{
 
     @Field(name = "url")
     private String url;
+
+    @Field(name = "image_base64")
+    private String imageBase64;
 
     @Field(name = "image")
     private String image;
@@ -47,4 +53,7 @@ public class Comic extends BaseMongoModel{
 
     @Field(name = "status")
     private String status;
+
+    @Field(name = "updated_at")
+    private Date updatedAt;
 }
