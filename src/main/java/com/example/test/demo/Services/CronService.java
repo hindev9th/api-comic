@@ -97,17 +97,6 @@ public class CronService {
 
                     Update update = new Update();
                     if (!checkExist(id)){
-                        ParseHtml.toDataUrl("https:" + ParseHtml.BASE_IMAGE_URL + image, new DataUrlCallback() {
-                            @Override
-                            public void onDataUrlGenerated(String dataUrl) {
-                                comic.setImageBase64(dataUrl);
-                            }
-
-                            @Override
-                            public void onError(String errorMessage) {
-                                saveLog("Get Base64 Error","Error: " + errorMessage);
-                            }
-                        });
                         this.createComic(comic);
                         continue;
                     }
