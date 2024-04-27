@@ -9,7 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.util.Date;
 
 @Getter
-public class BaseMongoModel {
+public abstract class BaseMongoModel {
     @Id
     private String _id;
 

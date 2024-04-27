@@ -14,4 +14,8 @@ public class ErrorResponse<T> extends ApiResponse {
     public ErrorResponse(Integer status, String message) {
         super(status, message, HttpStatus.BAD_REQUEST, null);
     }
+
+    public ErrorResponse(String message) {
+        super(400, message, HttpStatus.BAD_REQUEST, null);
+    }
 }

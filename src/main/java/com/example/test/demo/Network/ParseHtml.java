@@ -17,8 +17,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ParseHtml {
-    public static final String BASE_COMIC_URL = "https://www.nettruyentt.com/";
-    public static final String BASE_IMAGE_URL = "//st.nettruyentt.com/";
     public static Document getHtml(String url) throws IOException {
         Connection.Response res = Jsoup.connect(url)
                 .header("Content-Type","application/x-www-form-urlencoded")

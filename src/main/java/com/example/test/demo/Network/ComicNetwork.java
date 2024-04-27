@@ -1,5 +1,6 @@
 package com.example.test.demo.Network;
 
+import com.example.test.demo.Helpers.CommonHelper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,12 +26,12 @@ public class ComicNetwork {
 
     public static String getImage(Element element) {
         String imageUrl = element.select(".image img").attr("data-original");
-        return imageUrl.replace(ParseHtml.BASE_IMAGE_URL, "");
+        return imageUrl.replace(CommonHelper.getEnv("BASE_IMAGE_URL") , "");
     }
 
     public static String getUrl(Element element) {
         String url = element.select(".image a").attr("href");
-        return url.replace(ParseHtml.BASE_COMIC_URL, "");
+        return url.replace(CommonHelper.getEnv("BASE_COMIC_URL"), "");
     }
 
     public static String getDescription(Element element) {

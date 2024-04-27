@@ -23,3 +23,5 @@ services:
       - REDIS_PORT=6380
       - BASE_URL=http://localhost
       - APP_PORT=1182
+      - BASE_COMIC_URL=https://www.nettruyenvv.com/
+      - BASE_IMAGE_URL=//st.nettruyenvv.com/

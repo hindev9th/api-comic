@@ -26,7 +26,8 @@ public class AuthMiddleware extends OncePerRequestFilter {
         List<String> urls = Arrays.asList(
                 "/login",
                 "/register",
-                "/comics"
+                "/comics",
+                "/chapters"
         );
 
         ContentCachingRequestWrapper wrapper = new ContentCachingRequestWrapper(request);

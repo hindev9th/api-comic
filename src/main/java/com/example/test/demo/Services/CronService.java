@@ -1,15 +1,15 @@
 package com.example.test.demo.Services;
 
+import com.example.test.demo.Helpers.CommonHelper;
 import com.example.test.demo.Helpers.DateTimeConvertHelper;
 import com.example.test.demo.Http.Responses.ErrorResponse;
 import com.example.test.demo.Http.Responses.SuccessResponse;
+import com.example.test.demo.Models.Category;
 import com.example.test.demo.Models.Chapter;
 import com.example.test.demo.Models.Comic;
 import com.example.test.demo.Models.Log;
-import com.example.test.demo.Network.ChapterNetwork;
-import com.example.test.demo.Network.ComicNetwork;
-import com.example.test.demo.Network.DataUrlCallback;
-import com.example.test.demo.Network.ParseHtml;
+import com.example.test.demo.Network.*;
+import com.example.test.demo.Reponsitories.CategoryRepository;
 import com.example.test.demo.Reponsitories.ComicRepository;
 import com.example.test.demo.Reponsitories.LogRepository;
 import org.jsoup.nodes.Document;
@@ -30,11 +30,13 @@ public class CronService {
     private final MongoTemplate mongoTemplate;
     private final LogRepository logRepository;
     private final ComicRepository comicRepository;
+    private final CategoryRepository categoryRepository;
 
-    private CronService(MongoTemplate mongoTemplate, LogRepository logRepository, ComicRepository comicRepository) {
+    private CronService(MongoTemplate mongoTemplate, LogRepository logRepository, ComicRepository comicRepository, CategoryRepository categoryRepository) {
         this.mongoTemplate = mongoTemplate;
         this.logRepository = logRepository;
         this.comicRepository = comicRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Scheduled(fixedRate = 180000)
@@ -51,10 +53,10 @@ public class CronService {
         try {
 
             for (int j = 1; j <= page; j++) {
-                Document doc = (Document) ParseHtml.getHtml(ParseHtml.BASE_COMIC_URL + "?page=" + j);
+                Document doc = (Document) ParseHtml.getHtml(CommonHelper.getEnv("BASE_COMIC_URL") + "?page=" + j);
                 Elements elements = ComicNetwork.getList(doc);
 
-                if (elements.isEmpty()){
+                if (elements.isEmpty()) {
                     break;
                 }
 
@@ -96,7 +98,7 @@ public class CronService {
                     Query query = new Query(Criteria.where("id").is(id));
 
                     Update update = new Update();
-                    if (!checkExist(id)){
+                    if (!checkExist(id)) {
                         this.createComic(comic);
                         continue;
                     }
@@ -111,25 +113,53 @@ public class CronService {
 
                     this.mongoTemplate.findAndModify(query, update, Comic.class);
                 }
-                this.saveLog("Update " + elements.size() + " comics!","");
+                this.saveLog("Update " + elements.size() + " comics!", "");
             }
-            this.saveLog("update comic end","");
+            this.saveLog("update comic end", "");
 
         } catch (IOException e) {
-            this.saveLog("Error update comic",e.getMessage());
+            this.saveLog("Error update comic", e.getMessage());
         }
     }
 
-    private void createComic(Comic comic){
+    public void createCategories() {
+        try {
+            Document doc = (Document) ParseHtml.getHtml(CommonHelper.getEnv("BASE_COMIC_URL") + "?page=1");
+            Elements elements = CategoryNetwork.getList(doc);
+
+            for (org.jsoup.nodes.Element element : elements) {
+                String name = CategoryNetwork.getName(element);
+                if (name.isEmpty()) {
+                    continue;
+                }
+                String title = CategoryNetwork.getTitle(element);
+                String url = CategoryNetwork.getUrl(element);
+
+                Category category = new Category();
+                category.setName(name);
+                category.setTitle(title);
+                category.setUrl(url);
+
+                this.categoryRepository.save(category);
+            }
+
+            this.saveLog("Create categories success!","");
+        } catch (IOException e) {
+            this.saveLog("Error create categories", e.getMessage());
+        }
+
+    }
+
+    private void createComic(Comic comic) {
         this.comicRepository.save(comic);
     }
 
-    private boolean checkExist(String comicId){
+    private boolean checkExist(String comicId) {
         Query query = Query.query(Criteria.where("id").is(comicId));
-        return this.mongoTemplate.exists(query,Comic.class);
+        return this.mongoTemplate.exists(query, Comic.class);
     }
 
-    private void saveLog(String name, String content){
+    private void saveLog(String name, String content) {
         Log log = new Log();
         log.setName("update comic end");
         log.setContent(content);

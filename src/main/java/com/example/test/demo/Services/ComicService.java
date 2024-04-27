@@ -1,5 +1,6 @@
 package com.example.test.demo.Services;
 
+import com.example.test.demo.Helpers.CommonHelper;
 import com.example.test.demo.Http.Responses.ApiResponse;
 import com.example.test.demo.Http.Responses.SuccessResponse;
 import com.example.test.demo.Models.Comic;
@@ -37,14 +38,14 @@ public class ComicService {
             itemOj.put("name", item.getName());
             itemOj.put("another_name", item.getAnotherName());
             itemOj.put("url", item.getUrl());
-            itemOj.put("image", "https:" + ParseHtml.BASE_IMAGE_URL + item.getImage());
+            itemOj.put("image", "https:" + CommonHelper.getEnv("BASE_IMAGE_URL") + item.getImage());
             itemOj.put("categories", item.getCategories());
             itemOj.put("view", item.getView());
             itemOj.put("follow", item.getFollow());
             itemOj.put("description", item.getDescription());
             itemOj.put("chapter", item.getChapter());
             itemOj.put("status", item.getStatus());
-            itemOj.put("api_chapter", "https://www.nettruyentt.com/Comic/Services/ComicService.asmx/ProcessChapterList?comicId=" + item.getId());
+            itemOj.put("api_chapter", CommonHelper.getEnv("BASE_COMIC_URL") + "Comic/Services/ComicService.asmx/ProcessChapterList?comicId=" + item.getId());
 
             return itemOj;
         }));
