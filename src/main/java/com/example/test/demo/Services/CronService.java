@@ -2,8 +2,6 @@ package com.example.test.demo.Services;
 
 import com.example.test.demo.Helpers.CommonHelper;
 import com.example.test.demo.Helpers.DateTimeConvertHelper;
-import com.example.test.demo.Http.Responses.ErrorResponse;
-import com.example.test.demo.Http.Responses.SuccessResponse;
 import com.example.test.demo.Models.Category;
 import com.example.test.demo.Models.Chapter;
 import com.example.test.demo.Models.Comic;
@@ -37,6 +35,8 @@ public class CronService {
         this.logRepository = logRepository;
         this.comicRepository = comicRepository;
         this.categoryRepository = categoryRepository;
+        CommonHelper.BASE_COMIC_URL = CommonHelper.getEnv("BASE_COMIC_URL");
+        CommonHelper.BASE_IMAGE_URL = CommonHelper.getEnv("BASE_IMAGE_URL");
     }
 
     @Scheduled(fixedRate = 180000)
@@ -51,7 +51,6 @@ public class CronService {
 
     private void loadData(int page) {
         try {
-
             for (int j = 1; j <= page; j++) {
                 Document doc = (Document) ParseHtml.getHtml(CommonHelper.getEnv("BASE_COMIC_URL") + "?page=" + j);
                 Elements elements = ComicNetwork.getList(doc);
@@ -65,18 +64,18 @@ public class CronService {
                     String id = ComicNetwork.getId(element);
                     String name = ComicNetwork.getName(element);
                     String anotherName = ComicNetwork.getAnotherName(element);
-                    String url = ComicNetwork.getUrl(element);
-                    String image = ComicNetwork.getImage(element);
+                    String url = ComicNetwork.getUrl(element).replace(CommonHelper.BASE_COMIC_URL, "");
+                    String image = ComicNetwork.getImage(element).replace(CommonHelper.BASE_IMAGE_URL, "");
                     String view = ComicNetwork.getViewCount(element);
                     String follow = ComicNetwork.getFollowCount(element);
                     String description = ComicNetwork.getDescription(element);
                     String categories = ComicNetwork.getCategories(element);
                     String status = ComicNetwork.getStatus(element);
 
-                    String chapterId = ChapterNetwork.getId(element);
-                    String chapterName = ChapterNetwork.getName(element);
-                    String chapterUrl = ChapterNetwork.getUrl(element);
-                    String chapterTime = ChapterNetwork.getTime(element);
+                    String chapterId = ComicNetwork.getChapterId(element);
+                    String chapterName = ComicNetwork.getChapterName(element);
+                    String chapterUrl = ComicNetwork.getChapterUrl(element).replace(CommonHelper.BASE_COMIC_URL, "");
+                    String chapterTime = ComicNetwork.getChapterTime(element);
 
                     Date timeUpdate = DateTimeConvertHelper.convertTimeAgoToDateTime(chapterTime);
 

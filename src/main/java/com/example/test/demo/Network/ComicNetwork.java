@@ -25,13 +25,13 @@ public class ComicNetwork {
     }
 
     public static String getImage(Element element) {
-        String imageUrl = element.select(".image img").attr("data-original");
-        return imageUrl.replace(CommonHelper.getEnv("BASE_IMAGE_URL") , "");
+        String imageUrl = element.select(".image img").attr("data-original").replace(CommonHelper.getEnv("BASE_IMAGE_URL") , "");
+        return imageUrl;
     }
 
     public static String getUrl(Element element) {
-        String url = element.select(".image a").attr("href");
-        return url.replace(CommonHelper.getEnv("BASE_COMIC_URL"), "");
+        String url = element.select(".image a").attr("href").replace(CommonHelper.getEnv("BASE_COMIC_URL"), "");
+        return url;
     }
 
     public static String getDescription(Element element) {
@@ -78,5 +78,25 @@ public class ComicNetwork {
         Elements info = getListInfo(element);
         String follow = info.get(info.size() - 2).text();
         return follow.replace("Theo dõi:", "");
+    }
+
+    public static String getChapterId(Element element){
+        String id = element.select("figcaption .comic-item .clearfix").first().select(" a").attr("data-id");
+        return id;
+    }
+
+    public static String getChapterName(Element element){
+        String name = element.select("figcaption .comic-item .clearfix").first().select("a").text();
+        return name;
+    }
+
+    public static String getChapterUrl(Element element){
+        String url = element.select("figcaption .comic-item .clearfix").first().select("a").attr("href").replace(CommonHelper.getEnv("BASE_COMIC_URL"),"");
+        return url;
+    }
+
+    public static String getChapterTime(Element element){
+        String time = element.select("figcaption .comic-item .clearfix").first().select(".time").text();
+        return time;
     }
 }
