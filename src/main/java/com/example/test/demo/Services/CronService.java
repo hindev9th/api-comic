@@ -38,14 +38,13 @@ public class CronService {
     }
 
     @Scheduled(fixedRate = 180000)
-    @Async
     public void loadTwo() {
         this.loadData(1);
     }
 
-    public void loadAll() {
-        this.loadData(1000);
-    }
+//    public void loadAll() {
+//        this.loadData(1000);
+//    }
 
     private void loadData(int page) {
         try {
@@ -140,7 +139,7 @@ public class CronService {
                 this.categoryRepository.save(category);
             }
 
-            this.saveLog("Create categories success!","");
+            this.saveLog("Create categories success!", "");
         } catch (IOException e) {
             this.saveLog("Error create categories", e.getMessage());
         }
@@ -149,6 +148,7 @@ public class CronService {
 
     private void createComic(Comic comic) {
         this.comicRepository.save(comic);
+        this.saveLog("Save  comics!", "");
     }
 
     private boolean checkExist(String comicId) {
@@ -158,7 +158,7 @@ public class CronService {
 
     private void saveLog(String name, String content) {
         Log log = new Log();
-        log.setName("update comic end");
+        log.setName(name);
         log.setContent(content);
         log.setAddress(this.getClass().getCanonicalName());
         this.logRepository.save(log);
