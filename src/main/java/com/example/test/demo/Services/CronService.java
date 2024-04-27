@@ -35,8 +35,6 @@ public class CronService {
         this.logRepository = logRepository;
         this.comicRepository = comicRepository;
         this.categoryRepository = categoryRepository;
-        CommonHelper.BASE_COMIC_URL = CommonHelper.getEnv("BASE_COMIC_URL");
-        CommonHelper.BASE_IMAGE_URL = CommonHelper.getEnv("BASE_IMAGE_URL");
     }
 
     @Scheduled(fixedRate = 180000)
@@ -52,7 +50,7 @@ public class CronService {
     private void loadData(int page) {
         try {
             for (int j = 1; j <= page; j++) {
-                Document doc = (Document) ParseHtml.getHtml(CommonHelper.getEnv("BASE_COMIC_URL") + "?page=" + j);
+                Document doc = (Document) ParseHtml.getHtml(CommonHelper.BASE_COMIC_URL + "?page=" + j);
                 Elements elements = ComicNetwork.getList(doc);
 
                 if (elements.isEmpty()) {

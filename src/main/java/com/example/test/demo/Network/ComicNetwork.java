@@ -25,12 +25,12 @@ public class ComicNetwork {
     }
 
     public static String getImage(Element element) {
-        String imageUrl = element.select(".image img").attr("data-original").replace(CommonHelper.getEnv("BASE_IMAGE_URL") , "");
+        String imageUrl = element.select(".image img").attr("data-original").replace(CommonHelper.BASE_IMAGE_URL , "");
         return imageUrl;
     }
 
     public static String getUrl(Element element) {
-        String url = element.select(".image a").attr("href").replace(CommonHelper.getEnv("BASE_COMIC_URL"), "");
+        String url = element.select(".image a").attr("href").replace(CommonHelper.BASE_COMIC_URL, "");
         return url;
     }
 
@@ -91,7 +91,7 @@ public class ComicNetwork {
     }
 
     public static String getChapterUrl(Element element){
-        String url = element.select("figcaption .comic-item .clearfix").first().select("a").attr("href").replace(CommonHelper.getEnv("BASE_COMIC_URL"),"");
+        String url = element.select("figcaption .comic-item .clearfix").first().select("a").attr("href").replace(CommonHelper.BASE_COMIC_URL,"");
         return url;
     }
 

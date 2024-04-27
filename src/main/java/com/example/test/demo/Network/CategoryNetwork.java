@@ -25,6 +25,6 @@ public class CategoryNetwork {
 
     public static String getUrl(Element element) {
         String url = element.select("a").attr("href");
-        return url.replace(CommonHelper.getEnv("BASE_COMIC_URL"),"");
+        return url.replace(CommonHelper.BASE_COMIC_URL,"");
     }
 }
