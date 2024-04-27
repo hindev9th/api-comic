@@ -62,8 +62,8 @@ public class CronService {
                     String id = ComicNetwork.getId(element);
                     String name = ComicNetwork.getName(element);
                     String anotherName = ComicNetwork.getAnotherName(element);
-                    String url = ComicNetwork.getUrl(element).replace(CommonHelper.BASE_COMIC_URL, "");
-                    String image = ComicNetwork.getImage(element).replace(CommonHelper.BASE_IMAGE_URL, "");
+                    String url = ComicNetwork.getUrl(element);
+                    String image = ComicNetwork.getImage(element);
                     String view = ComicNetwork.getViewCount(element);
                     String follow = ComicNetwork.getFollowCount(element);
                     String description = ComicNetwork.getDescription(element);
@@ -72,7 +72,7 @@ public class CronService {
 
                     String chapterId = ComicNetwork.getChapterId(element);
                     String chapterName = ComicNetwork.getChapterName(element);
-                    String chapterUrl = ComicNetwork.getChapterUrl(element).replace(CommonHelper.BASE_COMIC_URL, "");
+                    String chapterUrl = ComicNetwork.getChapterUrl(element);
                     String chapterTime = ComicNetwork.getChapterTime(element);
 
                     Date timeUpdate = DateTimeConvertHelper.convertTimeAgoToDateTime(chapterTime);

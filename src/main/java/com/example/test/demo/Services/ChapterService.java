@@ -1,5 +1,6 @@
 package com.example.test.demo.Services;
 
+import com.example.test.demo.Helpers.CommonHelper;
 import com.example.test.demo.Http.Responses.ApiResponse;
 import com.example.test.demo.Http.Responses.ErrorResponse;
 import com.example.test.demo.Http.Responses.SuccessResponse;
@@ -20,7 +21,7 @@ public class ChapterService {
     public ApiResponse<?> list(String urlKey){
         Map<String, Object> result = new HashMap<>();
         try {
-            Document document  = ParseHtml.getHtml(urlKey);
+            Document document  = ParseHtml.getHtml(CommonHelper.BASE_COMIC_URL +  urlKey);
             Elements elements = ChapterNetwork.getList(document);
             result.put("list",elements.stream().map(item -> {
                 Map<String, Object> itemMap = new HashMap<>();
