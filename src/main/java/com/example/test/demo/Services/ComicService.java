@@ -38,14 +38,14 @@ public class ComicService {
             itemOj.put("name", item.getName());
             itemOj.put("another_name", item.getAnotherName());
             itemOj.put("url", item.getUrl());
-            itemOj.put("image", "https:" + CommonHelper.getEnv("BASE_IMAGE_URL") + item.getImage());
+            itemOj.put("image", "https:" + CommonHelper.BASE_IMAGE_URL + item.getImage());
             itemOj.put("categories", item.getCategories());
             itemOj.put("view", item.getView());
             itemOj.put("follow", item.getFollow());
             itemOj.put("description", item.getDescription());
             itemOj.put("chapter", item.getChapter());
             itemOj.put("status", item.getStatus());
-            itemOj.put("api_chapter", CommonHelper.getEnv("BASE_COMIC_URL") + "Comic/Services/ComicService.asmx/ProcessChapterList?comicId=" + item.getId());
+            itemOj.put("api_chapter", CommonHelper.BASE_COMIC_URL + "Comic/Services/ComicService.asmx/ProcessChapterList?comicId=" + item.getId());
 
             return itemOj;
         }));

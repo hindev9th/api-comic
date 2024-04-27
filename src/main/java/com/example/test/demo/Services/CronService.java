@@ -121,7 +121,7 @@ public class CronService {
 
     public void createCategories() {
         try {
-            Document doc = (Document) ParseHtml.getHtml(CommonHelper.getEnv("BASE_COMIC_URL") + "?page=1");
+            Document doc = (Document) ParseHtml.getHtml(CommonHelper.BASE_COMIC_URL + "?page=1");
             Elements elements = CategoryNetwork.getList(doc);
 
             for (org.jsoup.nodes.Element element : elements) {
