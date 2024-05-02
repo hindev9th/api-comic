@@ -37,7 +37,7 @@ public class CronService {
         this.categoryRepository = categoryRepository;
     }
 
-    @Scheduled(fixedRate = 180000)
+//    @Scheduled(fixedRate = 180000)
     public void loadTwo() {
         this.loadData(1);
     }

@@ -6,7 +6,7 @@ spring:
     multipart:
       max-file-size: "10MB"
   config:
-    import: "optional:file:env.properties"
+    import: optional:file:.env[.properties]
   data:
     mongodb:
       uri: ${MONGO_URI}
