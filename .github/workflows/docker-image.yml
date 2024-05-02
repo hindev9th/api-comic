@@ -1,0 +1,27 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run SSH Commands
+      id: ssh
+      uses: arthurvanl/action-exec-ssh@v1
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        port: ${{ secrets.SSH_PORT }}
+        username: root
+        password: ${{ secrets.SSH_PASSWORD }}
+        commands: |
+                cd public_html/api-comic
+                git pull origin master
+                docker-composer down -v
+                docker system prune -a
+                docker-composer up -d
+                docker-composer start
+
