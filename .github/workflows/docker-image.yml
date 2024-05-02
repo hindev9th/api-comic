@@ -15,10 +15,10 @@ jobs:
       with:
         host: ${{ secrets.SSH_HOST }}
         port: ${{ secrets.SSH_PORT }}
-        username: root
+        username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
         key_path: ~/.ssh/id_rsa.pub
-        run: |
+        script: |
           cd public_html/api-comic
           git pull origin master
           docker-composer down -v
