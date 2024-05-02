@@ -1,8 +1,6 @@
 package com.example.test.demo.Http.Controllers;
 
-import com.example.test.demo.Http.Responses.ApiResponse;
 import com.example.test.demo.Models.User;
-import com.example.test.demo.Reponsitories.UserRepository;
 import com.example.test.demo.Services.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
