@@ -11,17 +11,18 @@ jobs:
     steps:
     - name: Run SSH Commands
       id: ssh
-      uses: arthurvanl/action-exec-ssh@v1
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.SSH_HOST }}
         port: ${{ secrets.SSH_PORT }}
         username: root
         password: ${{ secrets.SSH_PASSWORD }}
-        commands: |
-                cd public_html/api-comic
-                git pull origin master
-                docker-composer down -v
-                docker system prune -a
-                docker-composer up -d
-                docker-composer start
+        key_path: ~/.ssh/id_rsa.pub
+        run: |
+          cd public_html/api-comic
+          git pull origin master
+          docker-composer down -v
+          docker system prune -a
+          docker-composer up -d
+          docker-composer start
 
