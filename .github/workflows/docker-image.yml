@@ -22,8 +22,9 @@ jobs:
         script: |
           cd public_html/api-comic
           git pull origin master
-          docker-composer down -v
-          docker system prune -a
-          docker-composer up -d
-          docker-composer start
+          docker-compose stop
+          docker-compose down -v
+          docker-compose build
+          docker-compose up -d
+          docker-compose start
 
