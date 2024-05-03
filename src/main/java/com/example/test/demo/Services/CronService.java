@@ -98,7 +98,7 @@ public class CronService {
 
                     Update update = new Update();
                     Comic comic1 = checkExist(id);
-                    if (comic1 != null) {
+                    if (comic1 == null) {
                         this.createComic(comic);
                         continue;
                     }
