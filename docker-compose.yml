@@ -1,27 +1,14 @@
 version: '3'
 
 services:
-  redis:
-    image: redis:latest
-    restart: always
-    ports:
-      - "6380:6380"
-
   spring-app:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - .:/app
     depends_on:
       - redis
     restart: always
     ports:
       - "1182:1182"
-    environment:
-      - MONGO_URI=mongodb+srv://hindev9th:b4SvMam66Q5ZWRfs@cluster0.qavd2co.mongodb.net/comics-app
-      - JWT_SECRET=EgZjaHJvbWUyBggAEEUYOTIHCAEQABiABDIHCAIQABiABDIICAMQABgWGB4yCAgEEAAYFhge
-      - REDIS_HOST=localhost
-      - REDIS_PORT=6380
-      - BASE_URL=http://localhost
-      - APP_PORT=1182
-      - BASE_COMIC_URL="https://www.nettruyenvv.com/"
-      - BASE_IMAGE_URL="//st.nettruyenvv.com/"

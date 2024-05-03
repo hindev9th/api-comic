@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class CronService {
@@ -37,7 +38,8 @@ public class CronService {
         this.categoryRepository = categoryRepository;
     }
 
-//    @Scheduled(fixedRate = 180000)
+    @Scheduled(fixedRate = 180000)
+    @Async
     public void loadTwo() {
         this.loadData(1);
     }
@@ -49,7 +51,8 @@ public class CronService {
     private void loadData(int page) {
         try {
             for (int j = 1; j <= page; j++) {
-                Document doc = (Document) ParseHtml.getHtml(CommonHelper.BASE_COMIC_URL + "?page=" + j);
+                String baseUrl = CommonHelper.getEnv("BASE_COMIC_URL").concat("?page=").concat(String.valueOf(j));
+                Document doc = ParseHtml.getHtml(baseUrl);
                 Elements elements = ComicNetwork.getList(doc);
 
                 if (elements.isEmpty()) {
@@ -94,9 +97,13 @@ public class CronService {
                     Query query = new Query(Criteria.where("id").is(id));
 
                     Update update = new Update();
-                    if (!checkExist(id)) {
+                    Comic comic1 = checkExist(id);
+                    if (comic1 != null) {
                         this.createComic(comic);
                         continue;
+                    }
+                    if (comic1.getChapter().getId() != chapterId){
+                        update.set("updated_at", timeUpdate);
                     }
 
                     update.set("view", view);
@@ -105,7 +112,6 @@ public class CronService {
                     update.set("categories", categories);
                     update.set("chapter", chapter);
                     update.set("status", status);
-                    update.set("updated_at", timeUpdate);
 
                     this.mongoTemplate.findAndModify(query, update, Comic.class);
                 }
@@ -120,7 +126,7 @@ public class CronService {
 
     public void createCategories() {
         try {
-            Document doc = (Document) ParseHtml.getHtml(CommonHelper.BASE_COMIC_URL + "?page=1");
+            Document doc = (Document) ParseHtml.getHtml(CommonHelper.getEnv("BASE_COMIC_URL") + "?page=1");
             Elements elements = CategoryNetwork.getList(doc);
 
             for (org.jsoup.nodes.Element element : elements) {
@@ -151,9 +157,9 @@ public class CronService {
         this.saveLog("Save  comics!", "");
     }
 
-    private boolean checkExist(String comicId) {
+    private Comic checkExist(String comicId) {
         Query query = Query.query(Criteria.where("id").is(comicId));
-        return this.mongoTemplate.exists(query, Comic.class);
+        return this.mongoTemplate.findOne(query, Comic.class);
     }
 
     private void saveLog(String name, String content) {

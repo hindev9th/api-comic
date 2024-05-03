@@ -3,17 +3,17 @@ package com.example.test.demo.Helpers;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommonHelper {
-    public static final String BASE_COMIC_URL = "https://www.nettruyenvv.com/";
-    public static final String BASE_IMAGE_URL = "//st.nettruyenvv.com/";
+    static Dotenv dotenv = Dotenv.load();
 
     public static String getEnv(String var) {
 
-        String envData = Dotenv.load().get(var);;
+        String envData = dotenv.get(var);
         return envData == null ? "" : envData;
     }
 

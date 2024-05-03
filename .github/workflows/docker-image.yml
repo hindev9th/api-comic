@@ -22,6 +22,15 @@ jobs:
         script: |
           cd public_html/api-comic
           git pull origin master
+          rm -rf .env
+          touch .env
+          echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > .env
+          echo "APP_PORT=${{ secrets.APP_PORT }}" > .env
+          echo "AUTHENTICATION_DB=${{ secrets.AUTHENTICATION_DB }}" > .env
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
+          echo "BASE_IMAGE_URL=${{ secrets.BASE_IMAGE_URL }}" > .env
+          echo "BASE_COMIC_URL=${{ secrets.BASE_IMAGE_URL }}" >> .env
           docker-compose stop
           docker-compose down -v
           docker-compose build
