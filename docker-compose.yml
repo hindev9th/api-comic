@@ -1,6 +1,11 @@
 version: '3'
 
 services:
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6380:6380"
   spring-app:
     build:
       context: .
