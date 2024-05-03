@@ -38,7 +38,8 @@ public class AuthMiddleware extends OncePerRequestFilter {
         HttpServletResponseHelper servletResponse = new HttpServletResponseHelper(response);
         List<String> urls = Arrays.asList(
                 "/login",
-                "/register"
+                "/register",
+                "/comics"
         );
 
         ContentCachingRequestWrapper wrapper = new ContentCachingRequestWrapper(request);

@@ -1,5 +1,6 @@
 package com.example.test.demo.Models;
 
+import com.example.test.demo.Helpers.CommonHelper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,4 +57,8 @@ public class Comic extends BaseMongoModel{
 
     @Field(name = "updated_at")
     private Date updatedAt;
+
+    public String getImage(){
+        return "https:" + CommonHelper.getEnv("BASE_IMAGE_URL").concat(image);
+    }
 }

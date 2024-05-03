@@ -64,7 +64,7 @@ public class ComicService {
             itemOj.put("name", item.getName());
             itemOj.put("another_name", item.getAnotherName());
             itemOj.put("url", item.getUrl());
-            itemOj.put("image", "https:" + CommonHelper.getEnv("BASE_IMAGE_URL") + item.getImage());
+            itemOj.put("image", item.getImage());
             itemOj.put("categories", item.getCategories());
             itemOj.put("view", item.getView());
             itemOj.put("follow", item.getFollow());
