@@ -21,7 +21,8 @@ jobs:
         key_path: ~/.ssh/id_rsa.pub
         script: |
           cd public_html/api-comic
-          git pull origin master
+          git fetch origin development
+          git pull origin development
           touch .env
           echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
