@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "development" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "development" ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,8 +28,6 @@ jobs:
           echo "APP_PORT=${{ secrets.APP_PORT }}" >> .env
           echo "AUTHENTICATION_DB=${{ secrets.AUTHENTICATION_DB }}" >> .env
           echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
-          echo "BASE_IMAGE_URL=${{ secrets.BASE_IMAGE_URL }}" >> .env
-          echo "BASE_COMIC_URL=${{ secrets.BASE_COMIC_URL }}" >> .env
           echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
           echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
           docker-compose stop
