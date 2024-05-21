@@ -21,6 +21,8 @@ public class DateTimeConvertHelper {
             if (unit.contains("phút")) resultDateTime = currentDateTime.minusMinutes(amount);
             if (unit.contains("giờ")) resultDateTime = currentDateTime.minusHours(amount);
             if (unit.contains("ngày")) resultDateTime = currentDateTime.minusDays(amount);
+            if (unit.contains("tháng")) resultDateTime = currentDateTime.minusMonths(amount);
+            if (unit.contains("năm")) resultDateTime = currentDateTime.minusYears(amount);
 
         }catch(Exception e){
             try {

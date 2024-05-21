@@ -1,6 +1,7 @@
 package com.example.test.demo.Models;
 
 import com.example.test.demo.Helpers.CommonHelper;
+import com.example.test.demo.Network.ParseHtml;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,6 @@ public class History {
     private List<Comic> comics;
 
     public String getChapterUrl(){
-        return CommonHelper.getEnv("BASE_COMIC_URL").concat(chapterUrl);
+        return ParseHtml.BASE_CRAWL_URL.concat(chapterUrl);
     }
 }

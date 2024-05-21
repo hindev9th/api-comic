@@ -17,6 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ParseHtml {
+    public static String BASE_CRAWL_URL = "";
     public static Document getHtml(String url) throws IOException {
         Connection.Response res = Jsoup.connect(url)
                 .header("Content-Type","application/x-www-form-urlencoded")

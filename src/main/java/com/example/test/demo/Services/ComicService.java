@@ -71,7 +71,7 @@ public class ComicService {
             itemOj.put("description", item.getDescription());
             itemOj.put("chapter", item.getChapter());
             itemOj.put("status", item.getStatus());
-            itemOj.put("api_chapter", CommonHelper.getEnv("BASE_COMIC_URL") + "Comic/Services/ComicService.asmx/ProcessChapterList?comicId=" + item.getId());
+            itemOj.put("api_chapter", ParseHtml.BASE_CRAWL_URL + "Comic/Services/ComicService.asmx/ProcessChapterList?comicId=" + item.getId());
 
             return itemOj;
         }));

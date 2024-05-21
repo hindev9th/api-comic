@@ -40,7 +40,9 @@ public class AuthMiddleware extends OncePerRequestFilter {
                 "/login",
                 "/register",
                 "/comics",
-                "/chapters"
+                "/chapters",
+                "/pages",
+                "/configs/crawl-url"
         );
 
         ContentCachingRequestWrapper wrapper = new ContentCachingRequestWrapper(request);
@@ -51,7 +53,7 @@ public class AuthMiddleware extends OncePerRequestFilter {
 
         try {
             Map<String, Object> headers = getHeaders(wrapper);
-            String token =headers.get("authorization").toString().replace("Bearer ","").replace("bearer ","");
+            String token = headers.get("authorization").toString().replace("Bearer ","").replace("bearer ","");
             Algorithm algorithm = Algorithm.HMAC256(CommonHelper.getEnv("JWT_SECRET"));
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT decodedJWT = verifier.verify(token);

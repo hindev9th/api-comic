@@ -57,8 +57,4 @@ public class Comic extends BaseMongoModel{
 
     @Field(name = "updated_at")
     private Date updatedAt;
-
-    public String getImage(){
-        return "https:" + CommonHelper.getEnv("BASE_IMAGE_URL").concat(image);
-    }
 }

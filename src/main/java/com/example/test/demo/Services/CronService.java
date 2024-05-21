@@ -2,13 +2,11 @@ package com.example.test.demo.Services;
 
 import com.example.test.demo.Helpers.CommonHelper;
 import com.example.test.demo.Helpers.DateTimeConvertHelper;
-import com.example.test.demo.Models.Category;
-import com.example.test.demo.Models.Chapter;
-import com.example.test.demo.Models.Comic;
-import com.example.test.demo.Models.Log;
+import com.example.test.demo.Models.*;
 import com.example.test.demo.Network.*;
 import com.example.test.demo.Reponsitories.CategoryRepository;
 import com.example.test.demo.Reponsitories.ComicRepository;
+import com.example.test.demo.Reponsitories.ConfigRepository;
 import com.example.test.demo.Reponsitories.LogRepository;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -31,11 +29,19 @@ public class CronService {
     private final ComicRepository comicRepository;
     private final CategoryRepository categoryRepository;
 
-    private CronService(MongoTemplate mongoTemplate, LogRepository logRepository, ComicRepository comicRepository, CategoryRepository categoryRepository) {
+    private final ConfigRepository configRepository;
+
+    private CronService(MongoTemplate mongoTemplate,
+                        LogRepository logRepository,
+                        ComicRepository comicRepository,
+                        CategoryRepository categoryRepository,
+                        ConfigRepository configRepository
+    ) {
         this.mongoTemplate = mongoTemplate;
         this.logRepository = logRepository;
         this.comicRepository = comicRepository;
         this.categoryRepository = categoryRepository;
+        this.configRepository = configRepository;
     }
 
     @Scheduled(fixedRate = 180000)
@@ -44,14 +50,18 @@ public class CronService {
         this.loadData(1);
     }
 
-//    public void loadAll() {
-//        this.loadData(1000);
-//    }
+
+    public void loadAll() {
+        this.loadData(1000);
+    }
 
     private void loadData(int page) {
         try {
+            Optional<Config> config = this.configRepository.findByType(Config.TYPE.BASE_CRAWL_URL.name());
+            ParseHtml.BASE_CRAWL_URL = config.get().getContent();
+
             for (int j = 1; j <= page; j++) {
-                String baseUrl = CommonHelper.getEnv("BASE_COMIC_URL").concat("?page=").concat(String.valueOf(j));
+                String baseUrl = ParseHtml.BASE_CRAWL_URL.concat("?page=").concat(String.valueOf(j));
                 Document doc = ParseHtml.getHtml(baseUrl);
                 Elements elements = ComicNetwork.getList(doc);
 
@@ -126,7 +136,7 @@ public class CronService {
 
     public void createCategories() {
         try {
-            Document doc = (Document) ParseHtml.getHtml(CommonHelper.getEnv("BASE_COMIC_URL") + "?page=1");
+            Document doc = (Document) ParseHtml.getHtml(ParseHtml.BASE_CRAWL_URL + "?page=1");
             Elements elements = CategoryNetwork.getList(doc);
 
             for (org.jsoup.nodes.Element element : elements) {
@@ -154,7 +164,7 @@ public class CronService {
 
     private void createComic(Comic comic) {
         this.comicRepository.save(comic);
-        this.saveLog("Save  comics!", "");
+//        this.saveLog("Save  comics!", "");
     }
 
     private Comic checkExist(String comicId) {
